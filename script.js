@@ -68,3 +68,16 @@ PRESSOP.forEach(item => item.addEventListener(`click`, function() {
     firstSlot = false;
     showop();
 }))
+
+//code for clear button
+function clearall() {
+    firstSlot = true;   
+    displayFirst = "";
+    displaySecond = "";
+    operator = "";
+    FIRSTSET.textContent = "";
+    SECONDSET.textContent = "";
+    OPDISPLAY.textContent = "";
+}
+const CLEAR = document.querySelector("#buttonclear");
+CLEAR.addEventListener(`click`, clearall);
