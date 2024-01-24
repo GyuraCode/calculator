@@ -1,106 +1,75 @@
 let total = 0;
-//Functions to manage calculator operations
-function add(a, b) {
-    let one = parseInt(a);
-    let two = parseInt(b);
-    total = Math.round((one + two) * 100) / 100;
-    
-    SHOWEQUAL.textContent = total;
+add = (a, b) => {
+    let one = parseFloat(a);
+    let two = parseFloat(b);
+    total = Math.round((two + one) * 100) / 100;
 }
-function subtract(a, b) {
-    total = Math.round((a - b) * 100) / 100;
-    SHOWEQUAL.textContent = total;
+subtract = (a, b) => {
+    total = Math.round((b - a) * 100) / 100;
 }
-function multiply(a, b) {
-    total = Math.round((a * b) * 100) / 100
-    SHOWEQUAL.textContent = total;
+multiply= (a, b) => {
+    total = Math.round((b * a) * 100) / 100;
 }
-function divide(a, b) {
-    total = Math.round((a / b) * 100) / 100
-    SHOWEQUAL.textContent = total;
+divide = (a, b) => {
+    total = Math.round((b / a) * 100) / 100;
 }
+
+
+let firstNum = "";
+let secondNum = "";
 let operator = "";
-const SHOWEQUAL = document.querySelector("#endresult");
-const EQUAL = document.querySelector("#buttonequal");
 
-//preliminary function to operate calculator
 function operate() {
-    if (operator == "" || displaySecond == "") {
-        SHOWEQUAL.textContent = "What are we calculating?"
+    if (operator == "" || secondNum == "" || firstNum == "") {
+        return;
     } else if (operator == "+") {
-       add(displayFirst, displaySecond);
+        add(firstNum, secondNum);
+        DISPLAY.textContent = total;
     } else if (operator == "-") {
-        subtract(displayFirst, displaySecond);
+        subtract(firstNum, secondNum);
+        DISPLAY.textContent = total;
     } else if (operator == "*") {
-        multiply(displayFirst, displaySecond);
-    } else if (operator == "/" && displaySecond == 0) {
-        SHOWEQUAL.textContent = "You're crashing the universe!";
+        multiply(firstNum, secondNum);
+        DISPLAY.textContent = total;
+    } else if (operator == "/" && firstNum == 0) {
+        DISPLAY.textContent = "you've crashed the universe!"
+        firstNum = "", total = "", secondNum = "";
     } else {
-        divide(displayFirst, displaySecond);
-    }
-    displayFirst = total;
-}   
-
-let firstSlot = true;
-let secondSlot = false;
-let displayFirst= "";
-let displaySecond = "";
-const FIRSTSET = document.getElementById("first");
-const OPDISPLAY = document.getElementById("displayop");
-const SECONDSET = document.getElementById("second");
-
-//code for setting listeners to number buttons
-const NUMBERBUTTON = document.querySelectorAll(`#numbers button`);
-NUMBERBUTTON.forEach(item => item.addEventListener(`click`, function() {
-    if (firstSlot === true) {
-        displayFirst += this.textContent;
-        showfirst();
-    } else if (secondSlot === true) {
-        displaySecond += this.textContent;
-        showsecond();
-    }
-}))
-//code for displaying input
-function showfirst() {
-    FIRSTSET.textContent = displayFirst; 
-};
-function showsecond() {
-    SECONDSET.textContent = displaySecond; 
-};
-function showop() {
-    OPDISPLAY.textContent = operator; 
+        divide(firstNum, secondNum);
+        DISPLAY.textContent = total;
+    }  
+    secondNum = total;
+    firstNum = "";
 }
 
-//code for handling operator
-const PRESSOP = document.querySelectorAll(`#operators button`);
-PRESSOP.forEach(item => item.addEventListener(`click`, function() {
+const DISPLAY = document.querySelector(`#display`);
+
+const OPERATOR = document.querySelectorAll(`#operators button`);
+OPERATOR.forEach(item => item.addEventListener(`click`, function() {
+    if (secondNum == "") {
+        operator = this.textContent;
+        secondNum = firstNum;
+        firstNum = "";
+        return;
+    }
+    operate();
     operator = this.textContent;
-    firstSlot = false;
-    secondSlot = true;
-    displaySecond = "";
-    SECONDSET.textContent = "";
-    if (SHOWEQUAL.textContent != "") {
-        displayFirst = total;
-        FIRSTSET.textContent = total;
-    }
-    showop();
-}))
+     
+    
 
-//code for clear button
-function clearall() {
-    firstSlot = true;
-    displayFirst = "";
-    displaySecond = "";
-    operator = "";
-    FIRSTSET.textContent = "";
-    SECONDSET.textContent = "";
-    OPDISPLAY.textContent = "";
-    SHOWEQUAL.textContent = "";
-}
-const CLEAR = document.querySelector("#buttonclear");
-CLEAR.addEventListener(`click`, clearall);
+}));
 
-//code for calc button
+const NUMBERS = document.querySelectorAll(`#numbers button`)
+NUMBERS.forEach(item => item.addEventListener(`click`, function() {    
+    firstNum += this.textContent;
+    DISPLAY.textContent = firstNum;
+}));
 
+const RESULT = document.querySelector(`#equal`);
+RESULT.addEventListener(`click`, operate);
 
-EQUAL.addEventListener(`click`, operate);
+const CLEAR = document.querySelector(`#buttonclear`);
+CLEAR.addEventListener(`click`, function() {
+    firstNum = "", secondNum = "", operator = "", total = 0;
+    DISPLAY.textContent = "";   
+})
