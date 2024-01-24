@@ -1,38 +1,48 @@
+let total = 0;
 //Functions to manage calculator operations
 function add(a, b) {
-    return a + b;
+    let one = parseInt(a);
+    let two = parseInt(b);
+    total = Math.round((one + two) * 100) / 100;
+    
+    SHOWEQUAL.textContent = total;
 }
 function subtract(a, b) {
-    return a - b;
+    total = Math.round((a - b) * 100) / 100;
+    SHOWEQUAL.textContent = total;
 }
 function multiply(a, b) {
-    return a * b;
+    total = Math.round((a * b) * 100) / 100
+    SHOWEQUAL.textContent = total;
 }
 function divide(a, b) {
-    return a / b;
+    total = Math.round((a / b) * 100) / 100
+    SHOWEQUAL.textContent = total;
 }
-let firstNum = 0;
-let secondNum = 0;
 let operator = "";
+const SHOWEQUAL = document.querySelector("#endresult");
+const EQUAL = document.querySelector("#buttonequal");
 
 //preliminary function to operate calculator
-function operate(operator) {
-    if (operator == "+") {
-        add(firstNum, secondNum);
+function operate() {
+    if (operator == "" || displaySecond == "") {
+        SHOWEQUAL.textContent = "What are we calculating?"
+    } else if (operator == "+") {
+       add(displayFirst, displaySecond);
     } else if (operator == "-") {
-        return subtract(firstNum, secondNum);
+        subtract(displayFirst, displaySecond);
     } else if (operator == "*") {
-        return multiply(firstNum, secondNum);
+        multiply(displayFirst, displaySecond);
+    } else if (operator == "/" && displaySecond == 0) {
+        SHOWEQUAL.textContent = "You're crashing the universe!";
     } else {
-        if (operator == "/" && secondNum == 0) {
-            return "You're crashing the universe!";
-        } else {
-        return divide(firstNum, secondNum);
-        }
+        divide(displayFirst, displaySecond);
     }
-}
+    displayFirst = total;
+}   
 
 let firstSlot = true;
+let secondSlot = false;
 let displayFirst= "";
 let displaySecond = "";
 const FIRSTSET = document.getElementById("first");
@@ -45,7 +55,7 @@ NUMBERBUTTON.forEach(item => item.addEventListener(`click`, function() {
     if (firstSlot === true) {
         displayFirst += this.textContent;
         showfirst();
-    } else {
+    } else if (secondSlot === true) {
         displaySecond += this.textContent;
         showsecond();
     }
@@ -66,18 +76,31 @@ const PRESSOP = document.querySelectorAll(`#operators button`);
 PRESSOP.forEach(item => item.addEventListener(`click`, function() {
     operator = this.textContent;
     firstSlot = false;
+    secondSlot = true;
+    displaySecond = "";
+    SECONDSET.textContent = "";
+    if (SHOWEQUAL.textContent != "") {
+        displayFirst = total;
+        FIRSTSET.textContent = total;
+    }
     showop();
 }))
 
 //code for clear button
 function clearall() {
-    firstSlot = true;   
+    firstSlot = true;
     displayFirst = "";
     displaySecond = "";
     operator = "";
     FIRSTSET.textContent = "";
     SECONDSET.textContent = "";
     OPDISPLAY.textContent = "";
+    SHOWEQUAL.textContent = "";
 }
 const CLEAR = document.querySelector("#buttonclear");
 CLEAR.addEventListener(`click`, clearall);
+
+//code for calc button
+
+
+EQUAL.addEventListener(`click`, operate);
